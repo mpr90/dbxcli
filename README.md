@@ -28,9 +28,9 @@ $ cd ~/bin
 ```sh
 export PATH=$PATH:$HOME/bin
 ```
-4. Download the `dbxcli` binary for OSX and rename it.  *IMPORTANT:* Check that the tag `v2.1.1` on the URL below is the latest release tag on the [Releases](https://github.com/dropbox/dbxcli/releases) page.
+4. Download the `dbxcli` binary for OSX and rename it.  *IMPORTANT:* Check that the tag `v2.1.1` on the URL below is the latest release tag on the [Releases](https://github.com/mpr90/dbxcli/releases) page.
 ```sh
-$ wget https://github.com/dropbox/dbxcli/releases/download/v2.1.1/dbxcli-darwin-amd64 
+$ wget https://github.com/mpr90/dbxcli/releases/download/v2.1.1/dbxcli-darwin-amd64 
 $ mv dbxcli-darwin-amd64 dbxcli
 ```
 5. Finally, make the binary an executable file and you are good to go!
@@ -43,8 +43,8 @@ For newcomers the go build process can be a bit arcane, these steps can be follo
 
 1. Make sure `git`, `go`, and `gox` are installed. 
 2. Create a Go folder. For example, `mkdir $HOME/go` or `mkdir $HOME/.go`. Navigate to it.
-3. `go get github.com/dropbox/dbxcli`. That's right, you don't manually clone it, this does it for you.
-4. `cd ~/go/src/github.com/dropbox/dbxcli` (adapt accordingly based on step 2).
+3. `go get github.com/mpr90/dbxcli`. That's right, you don't manually clone it, this does it for you.
+4. `cd ~/go/src/github.com/mpr90/dbxcli` (adapt accordingly based on step 2).
 
 Now we need to pause for a second to get development keys. 
 
@@ -54,6 +54,11 @@ Now we need to pause for a second to get development keys.
 8. Replace the value for `personalAppSecret` with the secret from the webpage.
 
 Finally we're ready to build. Run `go build`, and you'll see a `dbxcli` binary has been created in the current directory. Congrats, we're done!
+
+Note: in order to test the application without modifying the source code, the personal App key and personal App secret can be set using environment variables:
+
+export DROPBOX_PERSONAL_APP_KEY=...
+export DROPBOX_PERSONAL_APP_SECRET=...
 
 ## Usage
 
