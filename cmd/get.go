@@ -75,6 +75,20 @@ func get(cmd *cobra.Command, args []string) (err error) {
 		return
 	}
 
+	// Get file modification time from Dropbox and set downloaded file to match
+	var metaRes files.IsMetadata
+	metaRes, err = getFileMetadata(dbx, src)
+	if err == nil {
+		switch f := metaRes.(type) {
+		case *files.FileMetadata:
+			err = os.Chtimes(dst, f.ServerModified, f.ServerModified)
+
+			if err != nil {
+				fmt.Println(err)
+			}
+		}
+	}
+
 	return
 }
 
