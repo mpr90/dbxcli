@@ -18,12 +18,25 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"time"
 	"text/tabwriter"
 
 	"github.com/dropbox/dropbox-sdk-go-unofficial/dropbox/files"
 	"github.com/dustin/go-humanize"
 	"github.com/spf13/cobra"
 )
+
+// TimeIn returns the time in UTC if the name is "" or "UTC".
+// It returns the local time if the name is "Local".
+// Otherwise, the name is taken to be a location name in
+// the IANA Time Zone database, such as "Africa/Lagos".
+func TimeIn(t time.Time, name string) (time.Time, error) {
+    loc, err := time.LoadLocation(name)
+    if err == nil {
+        t = t.In(loc)
+    }
+    return t, err
+}
 
 // Sends a get_metadata request for a given path and returns the response
 func getFileMetadata(c files.Client, path string) (files.IsMetadata, error) {
@@ -46,10 +59,15 @@ func printFolderMetadata(w io.Writer, e *files.FolderMetadata, longFormat bool) 
 
 func printFileMetadata(w io.Writer, e *files.FileMetadata, longFormat bool, machineReadable bool) {
 	if longFormat {
+		// Change time to local time
+		localFileTime, err := TimeIn(e.ServerModified, "Local")
+		if (err != nil) {
+			localFileTime = e.ServerModified
+		}
 		if (machineReadable) {
-			fmt.Fprintf(w, "%s\t%d\t%s\t", e.Rev, e.Size, e.ServerModified)
+			fmt.Fprintf(w, "%s\t%d\t%s\t", e.Rev, e.Size, localFileTime)
 		} else {
-			fmt.Fprintf(w, "%s\t%s\t%s\t", e.Rev, humanize.IBytes(e.Size), humanize.Time(e.ServerModified))
+			fmt.Fprintf(w, "%s\t%s\t%s\t", e.Rev, humanize.IBytes(e.Size), humanize.Time(localFileTime))
 		}
 	}
 	fmt.Fprintf(w, "%s\t", e.PathDisplay)
